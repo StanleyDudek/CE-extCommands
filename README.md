@@ -37,4 +37,4 @@ This extension's commands and aliases are:
 
 * Admins may use `/pop` or `/p` to remove a specific vehicleID by playerID, `/pop 0 0`
 
-* Admins may use `/popall` or `/pa` to remove all of a specific player's vehicles by playerID, `/pop 0`
+* Admins may use `/popall` or `/pa` to remove all of a specific player's vehicles by playerID, `/popall 0`
