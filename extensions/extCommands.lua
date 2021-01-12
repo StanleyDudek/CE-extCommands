@@ -1,4 +1,5 @@
 local M = {}
+M.COBALT_VERSION = "1.5.3A"
 
 --called whenever the extension is loaded
 function onInit()
@@ -42,32 +43,52 @@ applyCommands(commands, extCommands)
 
 --removes the command-user's vehicles
 local function clear(player, ...)
-	vehCount = -1
-	for k,v in pairs(player.vehicles) do
-		vehCount = vehCount + 1
+	if player.playerID ~= nil then
+		vehCount = -1
+		for k,v in pairs(player.vehicles) do
+			vehCount = vehCount + 1
+		end
+		for vehID = 0, vehCount do
+			RemoveVehicle(player.playerID,vehID)
+		end
+		CElog(player.name .. " cleared their vehicles")
+		return "You have cleared your vehicles"
+	else
+		return "Nothing to clear, are you RCON?"
 	end
-	for vehID = 0, vehCount do
-		RemoveVehicle(player.playerID,vehID)
-	end
-	print(player.name .. " cleared their vehicles")
-	return "You have cleared your vehicles"
 end
 
 --removes a specific vehicle of the target
 local function pop(player, target, vehID, ...)
-	RemoveVehicle(target,vehID)
-	SendChatMessage(target, "Your vehicle has been removed")
+
+	if target.playerID ~= nil then
+		if vehID ~= nil then
+			RemoveVehicle(target,vehID)
+			SendChatMessage(target, "Your vehicle has been removed")
+			return "player's vehicle has been popped"
+		else
+			return "Vehicle not found, check vehID"
+		end
+	else
+		return "Player not present, check playerID"	
+	end
+	
 end
 
 --removes all the vehicles of the target
 local function popall(player, target, ...)
-	vehCount = -1
-	for k,v in pairs(players[tonumber(target)].vehicles) do
-		vehCount = vehCount + 1
-	end
-	for vehID = -0, vehCount do
-		RemoveVehicle(target,vehID)
-		SendChatMessage(target, "Your vehicle has been removed")
+	if target.playerID ~= nil then
+		vehCount = -1
+		for k,v in pairs(players[tonumber(target)].vehicles) do
+			vehCount = vehCount + 1
+		end
+		for vehID = -0, vehCount do
+			RemoveVehicle(target,vehID)
+			SendChatMessage(target, "Your vehicle has been removed")
+		end
+		return "You popped 'em all"
+	else
+		return "Player not present, check playerID"
 	end
 end
 
@@ -87,10 +108,11 @@ local function nuke(player, ...)
 	SendChatMessage(-1, "Everyone's vehicles have been removed")
 	--handle RCON nuke
 	if player.name then
-		print(player.name .. " nuked the server")
+		CElog(player.name .. " nuked the server")
 	else
-		print(player.ID .. " nuked the server")
+		CElog(player.ID .. " nuked the server")
 	end
+	return "Server has been nuked"
 end
 
 M.onInit = onInit
