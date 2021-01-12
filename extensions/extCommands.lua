@@ -31,10 +31,10 @@ local extCommands =
 	c =				{orginModule = "extCommands",	level = 1,	arguments = 0,	sourceLimited = 0,	description = "Deletes all of your vehicles"},
 	nuke =			{orginModule = "extCommands",	level = 10,	arguments = 0,	sourceLimited = 0,	description = "Deletes all vehicles on the server"},
 	n =				{orginModule = "extCommands",	level = 10,	arguments = 0,	sourceLimited = 0,	description = "Deletes all vehicles on the server"},
-	pop =			{orginModule = "extCommands",	level = 10,	arguments = 2,	sourceLimited = 0,	description = "Deletes a specific targeted vehicle of a player"},
-	p =				{orginModule = "extCommands",	level = 10,	arguments = 2,	sourceLimited = 0,	description = "Deletes a specific targeted vehicle of a player"},
-	popall =		{orginModule = "extCommands",	level = 10,	arguments = 1,	sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
-	pa =			{orginModule = "extCommands",	level = 10,	arguments = 1,	sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
+	pop =			{orginModule = "extCommands",	level = 10,	arguments = {"target","vehID"},	sourceLimited = 0,	description = "Deletes a specific targeted vehicle of a player"},
+	p =				{orginModule = "extCommands",	level = 10,	arguments = {"target","vehID"},	sourceLimited = 0,	description = "Deletes a specific targeted vehicle of a player"},
+	popall =		{orginModule = "extCommands",	level = 10,	arguments = {"target"},	sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
+	pa =			{orginModule = "extCommands",	level = 10,	arguments = {"target"},	sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
 
 }
 
@@ -61,7 +61,7 @@ end
 --removes a specific vehicle of the target
 local function pop(player, target, vehID, ...)
 
-	if target.playerID ~= nil then
+	if players[target].playerID ~= nil then
 		if vehID ~= nil then
 			RemoveVehicle(target,vehID)
 			SendChatMessage(target, "Your vehicle has been removed")
@@ -77,7 +77,7 @@ end
 
 --removes all the vehicles of the target
 local function popall(player, target, ...)
-	if target.playerID ~= nil then
+	if players[target].playerID ~= nil then
 		vehCount = -1
 		for k,v in pairs(players[tonumber(target)].vehicles) do
 			vehCount = vehCount + 1
