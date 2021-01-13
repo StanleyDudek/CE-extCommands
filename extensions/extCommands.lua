@@ -67,14 +67,18 @@ end
 --removes a specific vehicle of the target
 local function pop(player, target, vehID, ...)
 
-	if players[target].playerID ~= nil then
-		if player.vehicles ~= nil then
+	if target ~= nil then
+		vehCount = -1
+		for k,v in pairs(players[tonumber(target)].vehicles) do
+			vehCount = vehCount + 1
+		end
+		if vehCount == -1 then
+			CElog("Target has no vehicles", "extCommands")
+			return "Target has no vehicles"
+		else
 			RemoveVehicle(target,vehID)
 			SendChatMessage(target, "Your vehicle has been removed")
 			return "player's vehicle has been popped"
-		else
-			CElog("Target has no vehicles", "extCommands")
-			return "Target has no vehicles"
 		end
 	else
 		CElog("invalid ID", "extCommands")
@@ -85,20 +89,20 @@ end
 
 --removes all the vehicles of the target
 local function popall(player, target, ...)
-	if players[target].playerID ~= nil then
+	if target ~= nil then
 		vehCount = -1
-		if player.vehicles ~= nil then
-			for k,v in pairs(players[tonumber(target)].vehicles) do
-				vehCount = vehCount + 1
-			end
+		for k,v in pairs(players[tonumber(target)].vehicles) do
+			vehCount = vehCount + 1
+		end
+		if vehCount == -1 then
+			CElog("Target has no vehicles", "extCommands")
+			return "Target has no vehicles"
+		else
 			for vehID = -0, vehCount do
 				RemoveVehicle(target,vehID)
 				SendChatMessage(target, "Your vehicle has been removed")
 			end
 			return "You popped 'em all"
-		else
-			CElog("Target has no vehicles", "extCommands")
-			return "Target has no vehicles"
 		end
 	else
 		CElog("invalid ID", "extCommands")
