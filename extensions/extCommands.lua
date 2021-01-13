@@ -61,7 +61,7 @@ end
 --removes a specific vehicle of the target
 local function pop(player, target, vehID, ...)
 
-	if players[target].playerID ~= nil then
+	if target ~= nil then
 		if vehID ~= nil then
 			RemoveVehicle(target,vehID)
 			SendChatMessage(target, "Your vehicle has been removed")
@@ -77,7 +77,7 @@ end
 
 --removes all the vehicles of the target
 local function popall(player, target, ...)
-	if players[target].playerID ~= nil then
+	if target ~= nil then
 		vehCount = -1
 		for k,v in pairs(players[tonumber(target)].vehicles) do
 			vehCount = vehCount + 1
