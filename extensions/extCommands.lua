@@ -49,14 +49,18 @@ local function clear(player, ...)
 			for k,v in pairs(player.vehicles) do
 				vehCount = vehCount + 1
 			end
-			for vehID = 0, vehCount do
-				RemoveVehicle(player.playerID,vehID)
+			if vehCount == -1 then
+				CElog("Nothing to clear!", "extCommands")
+				return "Nothing to clear!"
+			else 
+				for vehID = 0, vehCount do
+					RemoveVehicle(player.playerID,vehID)
+				end
+				CElog(player.name .. " cleared their vehicles", "extCommands")
+				return "You have cleared your vehicles"
 			end
-			CElog(player.name .. " cleared their vehicles", "extCommands")
-			return "You have cleared your vehicles"
 		else
-			CElog("Nothing to clear!", "extCommands")
-			return "Nothing to clear!"
+
 		end
 	else
 		CElog("Nothing to clear!", "extCommands")
