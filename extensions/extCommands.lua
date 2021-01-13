@@ -55,9 +55,11 @@ local function clear(player, ...)
 			CElog(player.name .. " cleared their vehicles", "extCommands")
 			return "You have cleared your vehicles"
 		else
+			CElog("Nothing to clear!", "extCommands")
 			return "Nothing to clear!"
 		end
 	else
+		CElog("Nothing to clear!", "extCommands")
 		return "Nothing to clear, are you RCON?"
 	end
 end
@@ -71,9 +73,11 @@ local function pop(player, target, vehID, ...)
 			SendChatMessage(target, "Your vehicle has been removed")
 			return "player's vehicle has been popped"
 		else
-			return "Vehicles not found, check players[target].vehicles"
+			CElog("Target has no vehicles", "extCommands")
+			return "Target has no vehicles"
 		end
 	else
+		CElog("invalid ID", "extCommands")
 		return "Player not present, check playerID"	
 	end
 	
@@ -93,9 +97,11 @@ local function popall(player, target, ...)
 			end
 			return "You popped 'em all"
 		else
+			CElog("Target has no vehicles", "extCommands")
 			return "Target has no vehicles"
 		end
 	else
+		CElog("invalid ID", "extCommands")
 		return "Player not present, check playerID"
 	end
 end
@@ -114,6 +120,7 @@ local function nuke(player, ...)
 		end
 	end
 	SendChatMessage(-1, "Everyone's vehicles have been removed")
+	CElog("Server has been nuked", "extCommands")
 	return "Server has been nuked"
 end
 
