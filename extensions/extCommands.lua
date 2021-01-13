@@ -44,7 +44,7 @@ applyCommands(commands, extCommands)
 --removes the command-user's vehicles
 local function clear(player, ...)
 	if player.playerID ~= nil then
-		if players[player].vehicles ~= nil then
+		if player.vehicles ~= nil then
 			vehCount = -1
 			for k,v in pairs(player.vehicles) do
 				vehCount = vehCount + 1
@@ -68,7 +68,7 @@ end
 local function pop(player, target, vehID, ...)
 
 	if players[target] ~= nil then
-		if players[target].vehicles ~= nil then
+		if player.vehicles ~= nil then
 			RemoveVehicle(target,vehID)
 			SendChatMessage(target, "Your vehicle has been removed")
 			return "player's vehicle has been popped"
@@ -87,7 +87,7 @@ end
 local function popall(player, target, ...)
 	if players[target] ~= nil then
 		vehCount = -1
-		if players[target].vehicles ~= nil then
+		if player.vehicles ~= nil then
 			for k,v in pairs(players[tonumber(target)].vehicles) do
 				vehCount = vehCount + 1
 			end
