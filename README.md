@@ -18,6 +18,15 @@
 exampleExtension = "exampleExtension"
 extCommands = "extCommands"
 ```
+
+---
+## Configuration:
+- Now includes tracking kickCount and autobans respective of the configurable banThresh
+```
+local banThresh = 3
+```
+
+
 ---
 ## Usage:
 
@@ -31,6 +40,10 @@ This extension's commands and aliases are:
 
 `/popall` or `/pa`
 
+`/k`
+
+`/ks`
+
 * Any player may use `/clear` or `/c`. This will remove all of the command-user's vehicles.
 
 * Admins may use `/nuke` or `/n` to instantly remove all vehicles on the server.
@@ -38,3 +51,9 @@ This extension's commands and aliases are:
 * Admins may use `/pop` or `/p` to remove a specific vehicleID by playerID, `/pop 0 0`
 
 * Admins may use `/popall` or `/pa` to remove all of a specific player's vehicles by playerID, `/popall 0`
+
+* Admins may use `/k` to kick players and increment a kickCount, `/k <name> <optional reason>`
+  * this does NOT replace `/kick`
+
+* Any player may use `/ks` to check the number times a player has been kicked, `/ks <name>`
+
