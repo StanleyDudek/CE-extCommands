@@ -1,10 +1,25 @@
 local M = {}
 M.COBALT_VERSION = "1.5.3A"
 
+local banThresh = 3
+
 --called whenever the extension is loaded
 function onInit()
 	
 end
+
+
+--called whenever the player is authenticated by the server.
+local function onPlayerAuth(player)
+	kickCount = CobaltDB.query("playersDB/" .. player.name, "kickCount", "count")
+	if kickCount == nil then
+		kickCount = 0
+		CobaltDB.set("playersDB/" .. player.name, "kickCount", "count", kickCount)
+	elseif kickCount >= banThresh then
+		SendChatMessage(-1, "Banned player " .. player.name .. " tried to join")
+	end
+end
+
 
 --function to apply commands
 local function applyCommands(targetDatabase, tables)
@@ -33,13 +48,61 @@ local extCommands =
 	n =				{orginModule = "extCommands",	level = 10,	arguments = 0,					sourceLimited = 0,	description = "Deletes all vehicles on the server"},
 	pop =			{orginModule = "extCommands",	level = 10,	arguments = {"target","vehID"},	sourceLimited = 0,	description = "Deletes a specific targeted vehicle of a player"},
 	p =				{orginModule = "extCommands",	level = 10,	arguments = {"target","vehID"},	sourceLimited = 0,	description = "Deletes a specific targeted vehicle of a player"},
-	popall =		{orginModule = "extCommands",	level = 10,	arguments = {"target"},		sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
+	popall =		{orginModule = "extCommands",	level = 10,	arguments = {"target"},			sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
 	pa =			{orginModule = "extCommands",	level = 10,	arguments = {"target"},			sourceLimited = 0,	description = "Deletes all of a target player's vehicles"},
+	k =				{orginModule = "extCommands",	level = 10,	arguments = {"name", "*reason"},			sourceLimited = 0,	description = "Kick a player and increment kickCount"},
+	ks =			{orginModule = "extCommands",	level = 1,	arguments = {"name"},			sourceLimited = 0,	description = "return player's kickCount"},
 
 }
 
 --apply them
 applyCommands(commands, extCommands)
+
+local function newKick(sender, name, reason, ...)
+	reason = reason or "You've been kicked from the server!"
+	local player = players.getPlayerByName(name)
+	CobaltDB.openDatabase("playersDB/" .. name)
+	kickCount = CobaltDB.query("playersDB/" .. name, "kickCount", "count")
+	if kickCount == nil or kickCount == 0 then
+		kickCount = 1
+		CobaltDB.set("playersDB/" .. name, "kickCount", "count", kickCount)
+	else
+		kickCount = kickCount + 1
+		print(kickCount)
+		if kickCount == banThresh then
+			reason = kickCount .. " strikes, you're out!"
+			CobaltDB.openDatabase("playerPermissions")
+			CobaltDB.set("playerPermissions", name, "banned", 1)
+			CobaltDB.set("playerPermissions", name, "banReason", kickCount .. " strikes, you're out!")
+			CobaltDB.set("playersDB/" .. name, "kickCount", "count", kickCount)
+			if player then		
+				player:kick(reason)
+				return "Kicked " .. name .. " for: " .. reason .. ", kickCount: " .. kickCount
+			end
+			return "Banned " .. name .. " for: " .. reason .. ", kickCount: " .. kickCount
+		else
+			if kickCount > banThresh then
+				return "Player has already been kicked " .. kickCount .. " times and banned"
+			else
+				CobaltDB.set("playersDB/" .. name, "kickCount", "count", kickCount)
+			end
+		end
+	
+	end	
+	if player then		
+		player:kick(reason)
+		return "Kicked " .. name .. " for: " .. reason .. ", kickCount: " .. kickCount
+	end
+end
+
+local function kicks(sender, name, ...)
+	CobaltDB.openDatabase("playersDB/" .. name)
+	kickCount = CobaltDB.query("playersDB/" .. name, "kickCount", "count")
+	if kickCount == nil then
+		kickCount = 0
+	end
+	return name .. "'s kickCount is: " .. kickCount
+end
 
 --removes the command-user's vehicles
 local function clear(player, ...)
@@ -134,6 +197,8 @@ end
 
 M.onInit = onInit
 
+M.onPlayerAuth = onPlayerAuth
+
 M.clear = clear
 M.nuke = nuke
 M.popall = popall
@@ -143,6 +208,9 @@ M.c = clear
 M.n = nuke
 M.pa = popall
 M.p = pop
+
+M.k = newKick
+M.ks = kicks
 
 M.onInit()
 
