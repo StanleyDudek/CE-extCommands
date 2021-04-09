@@ -1,5 +1,7 @@
 local M = {}
-M.COBALT_VERSION = "1.5.3A"
+M.COBALT_VERSION = "1.6.0"
+
+utils.setLogType("extCommands",34)
 
 local banThresh = 3
 
