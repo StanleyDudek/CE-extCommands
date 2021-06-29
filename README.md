@@ -1,3 +1,5 @@
+## 🛑 OUTDATED UNTIL FURTHER NOTICE 🛑 USE AT OWN DISCRETION 🛑
+
 # CE-extCommands
 
 ### Basic Cobalt Essentials extension-based commands for BeamMP
